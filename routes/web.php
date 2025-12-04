@@ -9,9 +9,21 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Página de reservas
-Route::get('/reservas', [ReservaController::class, 'create'])->name('reservas.create');
-Route::post('/reservas', [ReservaController::class, 'store'])->name('reservas.store');
+// Rutas de reservas
+Route::prefix('reservas')->group(function () {
+    // Mostrar formulario de reserva
+    Route::get('/', [ReservaController::class, 'create'])->name('reservas');
+
+    // Guardar reserva
+    Route::post('/', [ReservaController::class, 'store'])->name('reservas.store');
+
+    // Confirmación de reserva
+    Route::get('/confirmacion/{id}', [ReservaController::class, 'confirmacion'])
+        ->name('reservas.confirmacion');
+
+    // Generar PDF de reserva
+    Route::get('/pdf/{id}', [ReservaController::class, 'pdf'])->name('reservas.pdf');
+});
 
 // Dashboard (solo usuarios autenticados y verificados)
 Route::get('/dashboard', function () {
@@ -26,4 +38,3 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
-
