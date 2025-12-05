@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Mil Heridas - Reservas</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Montserrat:wght@300;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                --verde-principal: #1b5e20;
+                --rojo-profundo: #b11f1f;
+                --amarillo-quemado: #ffca28;
+                --crema: #fff8e7;
+            }
+            body {
+                font-family: "Montserrat", sans-serif;
+                background: linear-gradient(
+                    180deg,
+                    var(--verde-principal) 0%,
+                    #003300 100%
+                );
+                color: #fff;
+                background-image: url("https://www.transparenttextures.com/patterns/asfalt-dark.png");
+                background-attachment: fixed;
+                scroll-behavior: smooth;
+            }
+            .logo-slab {
+                font-family: "Alfa Slab One", serif;
+                letter-spacing: 0.1em;
+                font-size: 2.5rem;
+                color: var(--amarillo-quemado);
+                -webkit-text-stroke: 1.5px var(--rojo-profundo);
+                text-shadow: 0 0 10px rgba(177, 31, 31, 0.7);
+                transition: transform 0.3s ease;
+            }
+            .logo-slab:hover {
+                transform: scale(1.05);
+            }
+            .btn-cta {
+                background: var(--rojo-profundo);
+                color: #fff;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            }
+            .btn-cta:hover {
+                background: var(--amarillo-quemado);
+                color: #1f1f1f;
+                transform: scale(1.05);
+            }
+            .input-retro {
+                border: 2px solid var(--rojo-profundo);
+                background: #fff;
+                color: #1f1f1f;
+                transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            }
+            .input-retro:focus {
+                border-color: var(--amarillo-quemado);
+                box-shadow: 0 0 0 3px rgba(255, 202, 40, 0.3);
+                outline: none;
+            }
+            .card-retro {
+                background: var(--crema);
+                color: #1f1f1f;
+                border: 3px solid var(--rojo-profundo);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            .card-retro:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 25px rgba(0, 0, 0, 0.4);
+            }
+            .hero-overlay {
+                background: rgba(27, 94, 32, 0.75);
+                backdrop-filter: blur(2px);
+            }
+
+            /* small helpers (kept unobtrusive) */
+            .hidden {
+                display: none;
+            }
+            .chip {
+                display: inline-block;
+                padding: 0.25rem 0.5rem;
+                border-radius: 999px;
+                background: #fff;
+                color: #111;
+                font-weight: 700;
+                font-size: 0.85rem;
+            }
+            #qrcode {
+                display: block;
+                margin: 0 auto;
+            }
+            .panel-content {
+                max-height: calc(100vh - 200px);
+                overflow: auto;
+            }
+        </style>
+    </head>
+    <body class="text-white">
+        <header
+            class="fixed top-0 left-0 w-full z-50 bg-[rgba(0,0,0,0.3)] backdrop-blur-md border-b border-[var(--amarillo-quemado)]"
+        >
+            <div
+                class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between"
+            >
+                <div
+                    class="logo-slab cursor-pointer"
+                    onclick="showSection('inicio')"
+                >
+                    MIL HERIDAS
+                </div>
+                <nav class="hidden md:flex gap-6 items-center font-medium">
+                    <a
+                        href="#"
+                        class="hover:text-[var(--amarillo-quemado)]"
+                        onclick="showSection('login')"
+                        >Iniciar Sesión</a
+                    >
+                    <a
+                        href="#"
+                        class="hover:text-[var(--amarillo-quemado)]"
+                        onclick="showSection('registro')"
+                        >Registrarse</a
+                    >
+                    <a
+                        href="#"
+                        class="btn-cta px-4 py-2 rounded-lg font-semibold text-sm"
+                        onclick="showSection('reservas')"
+                        >Reserva Ahora</a
+                    >
+                </nav>
+            </div>
+        </header>
+
+        <main class="pt-24">
+            <!-- INICIO -->
+            <section
+                id="inicio"
+                class="h-screen flex items-center justify-center text-center relative overflow-hidden"
+            >
+                <div
+                    class="absolute inset-0 bg-cover bg-center"
+                    style="
+                        background-image: url('https://images.unsplash.com/photo-1579547621706-1a9c79d5f28f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg');
+                        filter: brightness(0.8);
+                    "
+                ></div>
+                <div class="absolute inset-0 hero-overlay"></div>
+                <div class="relative z-10 max-w-3xl px-6">
+                    <h1
+                        class="text-5xl md:text-6xl font-bold mb-6 text-[var(--amarillo-quemado)] drop-shadow-[0_0_6px_var(--rojo-profundo)] leading-tight"
+                    >
+                        “Tu Mesa para el Despecho”
+                    </h1>
+                    <p class="text-lg text-gray-200 mb-8 max-w-2xl mx-auto">
+                        Tu refugio del despecho, donde cada lágrima tiene su
+                        mesa y cada trago su historia.
+                    </p>
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <button
+                            class="btn-cta px-6 py-3 rounded-xl text-lg font-semibold shadow-lg"
+                            onclick="showSection('reservas')"
+                        >
+                            ¡Reservar Ahora!
+                        </button>
+                        <button
+                            class="btn-cta px-6 py-3 rounded-xl text-lg font-semibold shadow-lg"
+                            onclick="showSection('registro')"
+                        >
+                            Regístrate
+                        </button>
+                        <button
+                            class="btn-cta px-6 py-3 rounded-xl text-lg font-semibold shadow-lg"
+                            onclick="showSection('login')"
+                        >
+                            Iniciar Sesión
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- REGISTRO -->
+            <section
+                id="registro"
+                class="min-h-screen flex items-center justify-center px-6 hidden"
+            >
+                <div class="card-retro p-8 rounded-xl w-full max-w-md">
+                    <h2
+                        class="text-3xl font-bold mb-6 text-center text-[var(--rojo-profundo)]"
+                    >
+                        Registro
+                    </h2>
+                    <form id="registerForm" class="space-y-4">
+                        <input
+                            type="text"
+                            id="reg_name"
+                            name="name"
+                            placeholder="Nombre completo"
+                            class="w-full input-retro rounded-lg px-4 py-2"
+                            required
+                        />
+                        <input
+                            type="email"
+                            id="reg_email"
+                            name="email"
+                            placeholder="Correo electrónico"
+                            class="w-full input-retro rounded-lg px-4 py-2"
+                            required
+                        />
+                        <input
+                            type="password"
+                            id="reg_password"
+                            name="password"
+                            placeholder="Contraseña"
+                            class="w-full input-retro rounded-lg px-4 py-2"
+                            required
+                        />
+                        <input
+                            type="tel"
+                            id="reg_phone"
+                            name="phone"
+                            placeholder="Número de Teléfono"
+                            class="w-full input-retro rounded-lg px-4 py-2"
+                            required
+                        />
+                        <button
+                            type="submit"
+                            class="btn-cta w-full py-3 rounded-lg font-semibold text-lg"
+                        >
+                            Registrarse
+                        </button>
+                    </form>
+                    <div class="mt-4 text-center">
+                        <button
+                            id="googleRegBtn"
+                            class="btn-cta w-full py-3 rounded-lg font-semibold text-lg flex items-center justify-center gap-2"
+                        >
+                            <img
+                                src="https://cdn-icons-png.flaticon.com/512/300/300221.png"
+                                class="w-6 h-6"
+                            />
+                            Registrarse con Google
+                        </button>
+                    </div>
+                    <p class="text-center mt-4 text-gray-700">
+                        ¿Ya tienes cuenta?
+                        <span
+                            class="cursor-pointer text-[var(--rojo-profundo)]"
+                            onclick="showSection('login')"
+                            >Inicia Sesión</span
+                        >
+                    </p>
+                </div>
+            </section>
+
+            <!-- LOGIN -->
+            <section
+                id="login"
+                class="min-h-screen flex items-center justify-center px-6 hidden"
+            >
+                <div class="card-retro p-8 rounded-xl w-full max-w-md">
+                    <h2
+                        class="text-3xl font-bold mb-6 text-center text-[var(--rojo-profundo)]"
+                    >
+                        Iniciar Sesión
+                    </h2>
+                    <form id="loginForm" class="space-y-4">
+                        <input
+                            type="email"
+                            id="loginEmail"
+                            placeholder="Correo electrónico"
+                            class="w-full input-retro rounded-lg px-4 py-2"
+                            required
+                        />
+                        <input
+                            type="password"
+                            id="loginPassword"
+                            placeholder="Contraseña"
+                            class="w-full input-retro rounded-lg px-4 py-2"
+                            required
+                        />
+                        <button
+                            type="submit"
+                            class="btn-cta w-full py-3 rounded-lg font-semibold text-lg"
+                        >
+                            Iniciar Sesión
+                        </button>
+                    </form>
+                    <div class="mt-4 text-center">
+                        <button
+                            id="googleLoginBtn"
+                            class="btn-cta w-full py-3 rounded-lg font-semibold text-lg flex items-center justify-center gap-2"
+                        >
+                            <img
+                                src="https://cdn-icons-png.flaticon.com/512/300/300221.png"
+                                class="w-6 h-6"
+                            />
+                            Iniciar con Google
+                        </button>
+                    </div>
+                    <p class="text-center mt-4 text-gray-700">
+                        ¿No tienes cuenta?
+                        <span
+                            class="cursor-pointer text-[var(--rojo-profundo)]"
+                            onclick="showSection('registro')"
+                            >Regístrate</span
+                        >
+                    </p>
+                </div>
+            </section>
+
+            <!-- RESERVAS (formulario completo EXACTO) -->
+            <section
+                id="reservas"
+                class="min-h-screen flex items-center justify-center px-6 hidden"
+            >
+                <div class="card-retro p-8 rounded-xl w-full max-w-4xl">
+                    <h2
+                        class="text-3xl font-bold mb-6 text-center text-[var(--rojo-profundo)]"
+                    >
+                        Reserva tu mesa
+                    </h2>
+                    <form id="reservaForm" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label
+                                    class="block text-sm font-semibold mb-1 text-[var(--rojo-profundo)]"
+                                    >Nombre Completo</label
+                                >
+                                <input
+                                    type="text"
+                                    name="name"
+                                    id="res_name"
+                                    class="w-full input-retro rounded-lg px-4 py-2"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-sm font-semibold mb-1 text-[var(--rojo-profundo)]"
+                                    >Correo Electrónico</label
+                                >
+                                <input
+                                    type="email"
+                                    name="email"
+                                    id="res_email"
+                                    class="w-full input-retro rounded-lg px-4 py-2"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                class="block text-sm font-semibold mb-1 text-[var(--rojo-profundo)]"
+                                >Número de Teléfono</label
+                            >
+                            <div class="flex gap-2">
+                                <select
+                                    name="lada"
+                                    id="res_lada"
+                                    class="w-20 input-retro rounded-lg px-2 py-2 text-center"
+                                    required
+                                >
+                                    <option value="+52">+52</option>
+                                    <option value="+1">+1</option>
+                                </select>
+                                <input
+                                    type="tel"
+                                    name="phone"
+                                    id="res_phone"
+                                    class="flex-1 input-retro rounded-lg px-4 py-2"
+                                    placeholder="Ej. 7711234567"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label
+                                    class="block text-sm font-semibold mb-1 text-[var(--rojo-profundo)]"
+                                    >Fecha</label
+                                >
+                                <input
+                                    type="date"
+                                    name="date"
+                                    id="res_date"
+                                    class="w-full input-retro rounded-lg px-4 py-2"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-sm font-semibold mb-1 text-[var(--rojo-profundo)]"
+                                    >Hora</label
+                                >
+                                <select
+                                    name="time"
+                                    id="res_time"
+                                    class="w-full input-retro rounded-lg px-4 py-2"
+                                    required
+                                >
+                                    <option value="">Selecciona la hora</option>
+                                    <option value="20:00">20:00</option>
+                                    <option value="20:30">20:30</option>
+                                    <option value="21:00">21:00</option>
+                                    <option value="21:30">21:30</option>
+                                    <option value="22:00">22:00</option>
+                                    <option value="22:30">22:30</option>
+                                    <option value="23:00">23:00</option>
+                                    <option value="23:30">23:30</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-sm font-semibold mb-1 text-[var(--rojo-profundo)]"
+                                    >Personas</label
+                                >
+                                <input
+                                    type="number"
+                                    name="party_size"
+                                    id="res_party"
+                                    min="1"
+                                    max="50"
+                                    class="w-full input-retro rounded-lg px-4 py-2"
+                                    placeholder="Ej. 4"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label
+                                    class="block text-sm font-semibold mb-1 text-[var(--rojo-profundo)]"
+                                    >Motivo de la Celebración</label
+                                >
+                                <select
+                                    name="reason"
+                                    id="res_reason"
+                                    class="w-full input-retro rounded-lg px-4 py-2"
+                                >
+                                    <option value="">
+                                        Selecciona (Opcional)
+                                    </option>
+                                    <option>Cumpleaños</option>
+                                    <option>Aniversario</option>
+                                    <option>Despedida</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-sm font-semibold mb-1 text-[var(--rojo-profundo)]"
+                                    >Área/Mesa Preferida</label
+                                >
+                                <select
+                                    name="area"
+                                    id="res_area"
+                                    class="w-full input-retro rounded-lg px-4 py-2"
+                                >
+                                    <option value="">Cualquier Mesa</option>
+                                    <option>Barra</option>
+                                    <option>Cabina</option>
+                                    <option>Interior</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-sm font-semibold mb-1 text-[var(--rojo-profundo)]"
+                                    >Mesero Específico (Opcional)</label
+                                >
+                                <select
+                                    name="waiter"
+                                    id="res_waiter"
+                                    class="w-full input-retro rounded-lg px-4 py-2"
+                                >
+                                    <option value="">Cualquiera</option>
+                                    <option>Juan</option>
+                                    <option>María</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                class="block text-sm font-semibold mb-1 text-[var(--rojo-profundo)]"
+                                >Comentarios Adicionales</label
+                            >
+                            <textarea
+                                name="comments"
+                                id="res_comments"
+                                rows="3"
+                                class="w-full input-retro rounded-lg px-4 py-2"
+                                placeholder="Opcional"
+                            ></textarea>
+                        </div>
+                        <button
+                            type="submit"
+                            class="btn-cta w-full py-3 rounded-lg font-semibold text-lg"
+                        >
+                            Confirmar Reserva
+                        </button>
+                    </form>
+
+                    <div id="qrContainer" class="mt-6 text-center hidden">
+                        <h3
+                            class="text-xl font-bold text-[var(--rojo-profundo)] mb-2"
+                        >
+                            Tu Código QR de Reserva
+                        </h3>
+                        <div
+                            id="resumenDatos"
+                            class="mb-4 text-left max-w-xl mx-auto p-4 bg-white/30 rounded"
+                        ></div>
+                        <canvas id="qrcode"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PANEL ADMIN -->
+            <section
+                id="adminPanel"
+                class="min-h-screen flex items-start justify-center px-6 hidden"
+            >
+                <div class="card-retro p-6 rounded-xl w-full max-w-5xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2
+                            class="text-3xl font-bold text-[var(--rojo-profundo)]"
+                        >
+                            Panel Administrador
+                        </h2>
+                        <div class="flex gap-2">
+                            <button
+                                class="btn-cta px-4 py-2"
+                                onclick="exportData()"
+                            >
+                                Exportar JSON
+                            </button>
+                            <button
+                                class="btn-cta px-4 py-2"
+                                onclick="handleLogout()"
+                            >
+                                Cerrar Sesión
+                            </button>
+                        </div>
+                    </div>
+                    <div class="panel-content">
+                        <h3 class="text-lg font-semibold mb-2">
+                            Reservas (todas)
+                        </h3>
+                        <div id="adminReservations" class="space-y-3"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PANEL STAFF -->
+            <section
+                id="staffPanel"
+                class="min-h-screen flex items-start justify-center px-6 hidden"
+            >
+                <div class="card-retro p-6 rounded-xl w-full max-w-5xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2
+                            class="text-3xl font-bold text-[var(--rojo-profundo)]"
+                        >
+                            Panel Encargado
+                        </h2>
+                        <div>
+                            <button
+                                class="btn-cta px-4 py-2"
+                                onclick="handleLogout()"
+                            >
+                                Cerrar Sesión
+                            </button>
+                        </div>
+                    </div>
+                    <div class="panel-content">
+                        <h3 class="text-lg font-semibold mb-2">
+                            Reservas próximas
+                        </h3>
+                        <div id="staffReservations" class="space-y-3"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PANEL USUARIO -->
+            <section
+                id="userPanel"
+                class="min-h-screen flex items-start justify-center px-6 hidden"
+            >
+                <div class="card-retro p-6 rounded-xl w-full max-w-5xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2
+                            class="text-3xl font-bold text-[var(--rojo-profundo)]"
+                        >
+                            Panel Usuario
+                        </h2>
+                        <div>
+                            <button
+                                class="btn-cta px-4 py-2"
+                                onclick="showSection('reservas')"
+                            >
+                                Hacer nueva reserva
+                            </button>
+                            <button
+                                class="btn-cta px-4 py-2"
+                                onclick="handleLogout()"
+                            >
+                                Cerrar Sesión
+                            </button>
+                        </div>
+                    </div>
+                    <div class="panel-content">
+                        <h3 class="text-lg font-semibold mb-2">Mis reservas</h3>
+                        <div id="userReservations" class="space-y-3"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- QR library -->
+        <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.0/build/qrcode.min.js"></script>
+
+        <script>
+            /* ---------- CONFIG ---------- */
+            const STORAGE_USERS = "mh_users_v1";
+            const STORAGE_RES = "mh_reservas_v1";
+            const STORAGE_CUR = "mh_current_v1";
+            const MAX_CAPACITY = 50; // personas por misma fecha+hora
+
+            /* ---------- DATA INIT ---------- */
+            let users = JSON.parse(localStorage.getItem(STORAGE_USERS)) || [
+                {
+                    email: "admin@milheridas.com",
+                    password: "admin123",
+                    role: "admin",
+                    name: "Administrador",
+                },
+                {
+                    email: "staff@milheridas.com",
+                    password: "staff123",
+                    role: "staff",
+                    name: "Encargado",
+                },
+                {
+                    email: "cliente@milheridas.com",
+                    password: "cliente123",
+                    role: "user",
+                    name: "Cliente Demo",
+                },
+            ];
+            let reservas = JSON.parse(localStorage.getItem(STORAGE_RES)) || [];
+            let currentUser =
+                JSON.parse(localStorage.getItem(STORAGE_CUR)) || null;
+
+            /* save defaults if newly initial */
+            localStorage.setItem(STORAGE_USERS, JSON.stringify(users));
+            localStorage.setItem(STORAGE_RES, JSON.stringify(reservas));
+
+            /* ---------- UI helpers ---------- */
+            function showSection(sectionId) {
+                document
+                    .querySelectorAll("main section")
+                    .forEach((s) => s.classList.add("hidden"));
+                const el = document.getElementById(sectionId);
+                if (el) el.classList.remove("hidden");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+
+                // refresh panels as needed
+                if (sectionId === "reservas") prefillReservation();
+                if (sectionId === "adminPanel") renderAdminReservations();
+                if (sectionId === "staffPanel") renderStaffReservations();
+                if (sectionId === "userPanel") renderUserReservations();
+            }
+
+            /* start at inicio */
+            showSection("inicio");
+
+            /* ---------- AUTH: register / login / logout ---------- */
+            document
+                .getElementById("registerForm")
+                .addEventListener("submit", function (e) {
+                    e.preventDefault();
+                    const name = document
+                        .getElementById("reg_name")
+                        .value.trim();
+                    const email = document
+                        .getElementById("reg_email")
+                        .value.trim()
+                        .toLowerCase();
+                    const pass = document.getElementById("reg_password").value;
+                    const phone = document
+                        .getElementById("reg_phone")
+                        .value.trim();
+                    if (!name || !email || !pass) {
+                        alert("Completa todos los campos");
+                        return;
+                    }
+                    if (users.find((u) => u.email === email)) {
+                        alert("Ese correo ya está registrado");
+                        return;
+                    }
+                    const newUser = {
+                        name,
+                        email,
+                        password: pass,
+                        phone,
+                        role: "user",
+                    };
+                    users.push(newUser);
+                    localStorage.setItem(STORAGE_USERS, JSON.stringify(users));
+                    alert("Registro exitoso. Ahora puedes iniciar sesión.");
+                    this.reset();
+                    showSection("login");
+                });
+
+            document
+                .getElementById("loginForm")
+                .addEventListener("submit", function (e) {
+                    e.preventDefault();
+                    const email = document
+                        .getElementById("loginEmail")
+                        .value.trim()
+                        .toLowerCase();
+                    const pass = document.getElementById("loginPassword").value;
+                    const user = users.find(
+                        (u) => u.email === email && u.password === pass
+                    );
+                    if (!user) {
+                        alert("Correo o contraseña incorrectos");
+                        return;
+                    }
+                    currentUser = user;
+                    localStorage.setItem(
+                        STORAGE_CUR,
+                        JSON.stringify(currentUser)
+                    );
+                    alert(
+                        `Bienvenido, ${
+                            user.name ||
+                            (user.role === "admin"
+                                ? "Administrador"
+                                : "Usuario")
+                        }`
+                    );
+                    // redirect by role
+                    if (user.role === "admin") showSection("adminPanel");
+                    else if (user.role === "staff") showSection("staffPanel");
+                    else showSection("userPanel");
+                    this.reset();
+                });
+
+            function handleLogout() {
+                currentUser = null;
+                localStorage.removeItem(STORAGE_CUR);
+                alert("Sesión cerrada");
+                showSection("inicio");
+            }
+
+            /* ---------- Reservations ---------- */
+            function prefillReservation() {
+                if (currentUser) {
+                    const n = document.getElementById("res_name");
+                    const e = document.getElementById("res_email");
+                    if (currentUser.name) n.value = currentUser.name;
+                    if (currentUser.email) e.value = currentUser.email;
+                }
+            }
+
+            /* count total people for date+time */
+            function countPeople(date, time) {
+                return reservas
+                    .filter(
+                        (r) =>
+                            r.date === date && r.time === time && !r.cancelled
+                    )
+                    .reduce((sum, r) => sum + Number(r.party_size || 0), 0);
+            }
+
+            /* submit reservation */
+            document
+                .getElementById("reservaForm")
+                .addEventListener("submit", function (e) {
+                    e.preventDefault();
+                    const form = e.target;
+                    const data = {
+                        id: "R" + Date.now(),
+                        name: form.name.value.trim(),
+                        email: form.email.value.trim().toLowerCase(),
+                        lada: form.lada.value,
+                        phone: form.phone.value.trim(),
+                        date: form.date.value,
+                        time: form.time.value,
+                        party_size: Number(form.party_size.value),
+                        reason: form.reason.value,
+                        area: form.area.value,
+                        waiter: form.waiter.value,
+                        comments: form.comments.value,
+                        created_at: new Date().toISOString(),
+                        cancelled: false,
+                    };
+
+                    const currentSum = countPeople(data.date, data.time);
+                    if (currentSum + data.party_size > MAX_CAPACITY) {
+                        data.waitlist = true;
+                    } else {
+                        data.waitlist = false;
+                    }
+
+                    reservas.push(data);
+                    localStorage.setItem(STORAGE_RES, JSON.stringify(reservas));
+
+                    // show resumen + QR
+                    const resumenEl = document.getElementById("resumenDatos");
+                    resumenEl.innerHTML = `
+    <p><strong>Nombre:</strong> ${data.name}</p>
+    <p><strong>Fecha:</strong> ${data.date}</p>
+    <p><strong>Hora:</strong> ${data.time}</p>
+    <p><strong>Personas:</strong> ${data.party_size}</p>
+    <p><strong>Área:</strong> ${data.area || "Sin preferencia"}</p>
+    <p><strong>Estado:</strong> ${
+        data.waitlist
+            ? '<span class="chip">Lista de espera</span>'
+            : '<span class="chip">Confirmada</span>'
+    }</p>
+    <p class="small-gray mt-2">ID: ${data.id}</p>
+  `;
+                    document
+                        .getElementById("qrContainer")
+                        .classList.remove("hidden");
+
+                    QRCode.toCanvas(
+                        document.getElementById("qrcode"),
+                        JSON.stringify(data),
+                        { width: 200 },
+                        function (err) {
+                            if (err) console.error(err);
+                        }
+                    );
+
+                    alert(
+                        data.waitlist
+                            ? "El lugar está lleno para ese horario. Te hemos puesto en la lista de espera."
+                            : "Reserva confirmada correctamente."
+                    );
+                    form.reset();
+                    if (currentUser && currentUser.name)
+                        document.getElementById("res_name").value =
+                            currentUser.name;
+                    if (currentUser && currentUser.email)
+                        document.getElementById("res_email").value =
+                            currentUser.email;
+
+                    // refresh displays
+                    renderAdminReservations();
+                    renderStaffReservations();
+                    renderUserReservations();
+                });
+
+            /* ---------- Panels rendering ---------- */
+            function renderAdminReservations() {
+                const container = document.getElementById("adminReservations");
+                container.innerHTML = "";
+                if (reservas.length === 0) {
+                    container.innerHTML =
+                        '<p class="small-gray">No hay reservas aún.</p>';
+                    return;
+                }
+                reservas
+                    .slice()
+                    .reverse()
+                    .forEach((r) => {
+                        const card = document.createElement("div");
+                        card.className = "p-4 bg-white/90 rounded";
+                        card.innerHTML = `
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p><strong>${r.name}</strong> — ${r.email} (${r.lada} ${r.phone})</p>
+          <p>${r.date} · ${r.time} · ${r.party_size} personas · ${
+                            r.area || "Área libre"
+                        }</p>
+          <p class="small-gray">${r.reason || "Sin motivo"} · ID ${r.id}</p>
+          <p>${r.comments ? "Comentarios: " + r.comments : ""}</p>
+        </div>
+        <div class="text-right">
+          <p>${
+              r.waitlist
+                  ? '<span class="chip">EN LISTA</span>'
+                  : '<span class="chip">CONFIRMADA</span>'
+          }</p>
+          <div class="mt-3 flex flex-col gap-2">
+            <button onclick="toggleCancel('${
+                r.id
+            }')" class="btn-cta px-3 py-1">Cancelar</button>
+            ${
+                r.waitlist
+                    ? `<button onclick="promoteFromWait('${r.id}')" class="btn-cta px-3 py-1">Promover</button>`
+                    : ""
+            }
+          </div>
+        </div>
+      </div>
+    `;
+                        container.appendChild(card);
+                    });
+            }
+
+            function renderStaffReservations() {
+                const container = document.getElementById("staffReservations");
+                container.innerHTML = "";
+                const upcoming = reservas
+                    .filter((r) => !r.cancelled)
+                    .sort(
+                        (a, b) =>
+                            new Date(a.date + " " + a.time) -
+                            new Date(b.date + " " + b.time)
+                    );
+                if (upcoming.length === 0) {
+                    container.innerHTML =
+                        '<p class="small-gray">No hay reservas próximas.</p>';
+                    return;
+                }
+                upcoming.forEach((r) => {
+                    const el = document.createElement("div");
+                    el.className = "p-3 bg-white/90 rounded";
+                    el.innerHTML = `<p><strong>${r.date} ${r.time}</strong> — ${
+                        r.name
+                    } (${r.party_size}) ${
+                        r.waitlist ? '<span class="chip">LISTA</span>' : ""
+                    }</p>`;
+                    container.appendChild(el);
+                });
+            }
+
+            function renderUserReservations() {
+                const container = document.getElementById("userReservations");
+                container.innerHTML = "";
+                if (!currentUser) {
+                    container.innerHTML =
+                        '<p class="small-gray">Inicia sesión para ver tus reservas.</p>';
+                    return;
+                }
+                const mine = reservas.filter(
+                    (r) => r.email === currentUser.email
+                );
+                if (mine.length === 0) {
+                    container.innerHTML =
+                        '<p class="small-gray">No tienes reservas aún.</p>';
+                    return;
+                }
+                mine.slice()
+                    .reverse()
+                    .forEach((r) => {
+                        const el = document.createElement("div");
+                        el.className = "p-3 bg-white/90 rounded";
+                        el.innerHTML = `
+      <p><strong>${r.date} ${r.time}</strong> — ${r.name} · ${
+                            r.party_size
+                        } personas</p>
+      <p>${
+          r.waitlist
+              ? '<span class="chip">EN LISTA</span>'
+              : '<span class="chip">CONFIRMADA</span>'
+      } · ID ${r.id}</p>
+      <div class="mt-2 flex gap-2">
+        <button class="btn-cta px-3 py-1" onclick="downloadQR('${
+            r.id
+        }')">Descargar QR</button>
+        <button class="btn-cta px-3 py-1" onclick="cancelReserva('${
+            r.id
+        }')">Cancelar</button>
+      </div>
+    `;
+                        container.appendChild(el);
+                    });
+            }
+
+            /* ---------- Actions ---------- */
+            function toggleCancel(id) {
+                const idx = reservas.findIndex((r) => r.id === id);
+                if (idx === -1) return alert("Reserva no encontrada");
+                reservas[idx].cancelled = !reservas[idx].cancelled;
+                localStorage.setItem(STORAGE_RES, JSON.stringify(reservas));
+                renderAdminReservations();
+                renderStaffReservations();
+                renderUserReservations();
+            }
+
+            function cancelReserva(id) {
+                if (!confirm("¿Cancelar esta reserva?")) return;
+                const idx = reservas.findIndex((r) => r.id === id);
+                if (idx === -1) return alert("Reserva no encontrada.");
+                reservas[idx].cancelled = true;
+                localStorage.setItem(STORAGE_RES, JSON.stringify(reservas));
+                renderAdminReservations();
+                renderStaffReservations();
+                renderUserReservations();
+                alert("Reserva cancelada.");
+            }
+
+            function promoteFromWait(id) {
+                const r = reservas.find((x) => x.id === id);
+                if (!r) return alert("Reserva no encontrada");
+                const currentPeople = countPeople(r.date, r.time);
+                if (currentPeople + Number(r.party_size) <= MAX_CAPACITY) {
+                    r.waitlist = false;
+                    localStorage.setItem(STORAGE_RES, JSON.stringify(reservas));
+                    alert("Reserva promovida de la lista de espera.");
+                    renderAdminReservations();
+                    renderStaffReservations();
+                    renderUserReservations();
+                } else {
+                    alert("Aún no hay capacidad para promover esta reserva.");
+                }
+            }
+
+            function exportData() {
+                const data = { users, reservas };
+                const blob = new Blob([JSON.stringify(data, null, 2)], {
+                    type: "application/json",
+                });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "milheridas_data.json";
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            function downloadQR(id) {
+                const r = reservas.find((x) => x.id === id);
+                if (!r) return alert("Reserva no encontrada");
+                const canvas = document.createElement("canvas");
+                QRCode.toCanvas(
+                    canvas,
+                    JSON.stringify(r),
+                    { width: 300 },
+                    (err) => {
+                        if (err) return alert("Error generando QR");
+                        const link = document.createElement("a");
+                        link.href = canvas.toDataURL("image/png");
+                        link.download = `${r.id}_qr.png`;
+                        link.click();
+                    }
+                );
+            }
+
+            /* ---------- Utils ---------- */
+            function countPeople(date, time) {
+                return reservas
+                    .filter(
+                        (r) =>
+                            r.date === date && r.time === time && !r.cancelled
+                    )
+                    .reduce((s, r) => s + Number(r.party_size || 0), 0);
+            }
+
+            /* ---------- Initialization ---------- */
+            (function init() {
+                // load from storage
+                users =
+                    JSON.parse(localStorage.getItem(STORAGE_USERS)) || users;
+                reservas =
+                    JSON.parse(localStorage.getItem(STORAGE_RES)) || reservas;
+                currentUser =
+                    JSON.parse(localStorage.getItem(STORAGE_CUR)) ||
+                    currentUser;
+                // if user already logged in, go to panel
+                if (currentUser) {
+                    if (currentUser.role === "admin") showSection("adminPanel");
+                    else if (currentUser.role === "staff")
+                        showSection("staffPanel");
+                    else showSection("userPanel");
+                } else {
+                    showSection("inicio");
+                }
+            })();
+        </script>
+    </body>
+</html>
