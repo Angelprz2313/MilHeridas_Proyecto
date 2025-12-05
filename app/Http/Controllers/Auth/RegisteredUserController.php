@@ -15,7 +15,7 @@ use Illuminate\View\View;
 class RegisteredUserController extends Controller
 {
     /**
-     * Display the registration view.
+     * Mostrar la vista de registro.
      */
     public function create(): View
     {
@@ -23,28 +23,34 @@ class RegisteredUserController extends Controller
     }
 
     /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
+     * Manejar el registro de un usuario.
      */
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        // Crear usuario (por defecto cliente)
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'cliente', 
         ]);
 
         event(new Registered($user));
 
+        // Loguear automáticamente
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        // Redirigir según rol
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        } else {
+            return redirect()->route('cliente.dashboard');
+        }
     }
 }
